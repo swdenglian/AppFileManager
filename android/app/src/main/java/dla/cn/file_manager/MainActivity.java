@@ -1,101 +1,72 @@
 package dla.cn.file_manager;
 
+
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 import android.view.View;
-import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.ProgressBar;
 
-import java.util.ArrayList;
-
-import dla.cn.file_manager.sqlite.FileTaskBean;
-import dla.cn.file_manager.sqlite.FileTaskDao;
+import dla.cn.file_manager.download.Download;
+import dla.cn.file_manager.download.DownloadObserver;
+import dla.cn.file_manager.download.HttpDownload;
+import dla.cn.file_manager.download.SocketDownload;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 
 public class MainActivity extends AppCompatActivity {
-    FileTaskDao fileTaskDao = new FileTaskDao(this);
-    String path = "http://192.168.1.8:8080/test.zip";
-    ArrayList<String> datas ;
-    MyAdapter myAdapter ;
+    ProgressBar progressbar;
+    DownloadObserver downloadObserver;
+    HttpDownload httpDownload;
+
+    ProgressBar progressbar1;
+    DownloadObserver downloadObserver1;
+    SocketDownload socketDownload;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        datas = new ArrayList<>();
-        datas.add("你好");
-        myAdapter = new MyAdapter(datas,this);
+        progressbar = findViewById(R.id.progressbar);
+        progressbar.setMax(100);
+        downloadObserver = new DownloadObserver(this, progressbar);
+        httpDownload = new HttpDownload(" http://192.168.1.8:8080/1234.mp4", getFilesDir().getPath(), "http1234.mp4");
 
-        ListView listView = findViewById(R.id.list_view);
-        listView.setAdapter(myAdapter);
+        progressbar1 = findViewById(R.id.progressbar1);
+        progressbar1.setMax(100);
+        downloadObserver1 = new DownloadObserver(this, progressbar1);
+        socketDownload = new SocketDownload(
+                "http://192.168.1.8:4000/file",
+                "1234.mp4", getFilesDir().getPath(), "socket1234.mp4");
 
-        this.setDBDatas();
     }
 
-    public void setDatas(ArrayList<String> arrayList) {
-        this.datas.clear();
-        for(int i =0; i < arrayList.size(); i++){
-            this.datas.add(arrayList.get(i));
-        }
+    public void httpDownload(View v) {
+        if (httpDownload.getState() == HttpDownload.DownloadAction.NO_START ||
+                httpDownload.getState() == HttpDownload.DownloadAction.ON_PAUSE ) {
 
-        this.myAdapter.notifyDataSetChanged();
+            httpDownload
+                    .download(this)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(downloadObserver);
+
+        } else {
+            downloadObserver.getDisposable().dispose();
+        }
     }
 
-    public void setDBDatas() {
-        ArrayList<FileTaskBean> fileTaskBeans = fileTaskDao.selectAll();
-        ArrayList<String> nDatas = new ArrayList<>();
-        if(null == fileTaskBeans){
-            return;
+
+    public void socketDownload(View v) {
+        if (socketDownload.getState() == Download.DownloadAction.NO_START ||
+                socketDownload.getState() == Download.DownloadAction.ON_PAUSE ) {
+            socketDownload
+                    .download(this)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(downloadObserver1);
+        } else {
+            downloadObserver1.getDisposable().dispose();
         }
-
-        for (int i = 0; i < fileTaskBeans.size(); i++) {
-            nDatas.add(fileTaskBeans.get(i).getFilename());
-        }
-
-        this.setDatas(nDatas);
-    }
-
-    public void add(View v) {
-        FileTaskBean fileTaskBean = new FileTaskBean();
-        fileTaskBean.setFilemd5("md5");
-        fileTaskBean.setFilesize(123);
-        fileTaskBean.setNetworkpath(path);
-        fileTaskBean.setFilename("test.zip");
-        boolean b = fileTaskDao.insertOne(fileTaskBean);
-
-        if (b) {
-            this.setDBDatas();
-        }
-
-        Toast.makeText(this, b ? "添加成功" : "添加失败", Toast.LENGTH_SHORT).show();
-    }
-
-    public void update(View v) {
-        FileTaskBean fileTaskBean = fileTaskDao.selectOne(path);
-        fileTaskBean.setFilename("dla.zip");
-        boolean b = fileTaskDao.updateOne(fileTaskBean);
-
-        if (b) {
-            this.setDBDatas();
-        }
-
-        Toast.makeText(this, b ? "修改成功" : "修改失败", Toast.LENGTH_SHORT).show();
-    }
-
-    public void query(View v) {
-        FileTaskBean fileTaskBean = fileTaskDao.selectOne(path);
-        Toast.makeText(this, fileTaskBean != null ? fileTaskBean.getFilename() : null, Toast.LENGTH_SHORT).show();
-    }
-
-    public void delete(View v) {
-        FileTaskBean fileTaskBean = fileTaskDao.selectOne(path);
-        boolean b = fileTaskDao.deleteOne(fileTaskBean);
-
-        if (b) {
-            this.setDBDatas();
-        }
-
-        Toast.makeText(this, b ? "删除成功" : "删除失败", Toast.LENGTH_SHORT).show();
     }
 }

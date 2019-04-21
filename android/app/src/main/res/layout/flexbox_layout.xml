@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.flexbox.FlexboxLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:flexDirection="column"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.flexbox.FlexboxLayout
+        app:layout_flexGrow="1"
+        app:layout_flexShrink="1"
+        app:layout_flexBasisPercent="0%"
+        android:background="#dcdcdc"
+        app:flexWrap="wrap"
+        app:alignItems="flex_start"
+        app:justifyContent="flex_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <com.google.android.flexbox.FlexboxLayout
+            android:background="#ff0000"
+            app:layout_flexShrink="1"
+            app:layout_flexGrow="1"
+            android:layout_margin="10dp"
+            app:layout_flexBasisPercent="0%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/img1"
+                android:layout_width="100dp"
+                android:layout_height="100dp" />
+        </com.google.android.flexbox.FlexboxLayout>
+        <com.google.android.flexbox.FlexboxLayout
+            android:background="#ff0000"
+            app:layout_flexShrink="1"
+            app:layout_flexGrow="1"
+            android:layout_margin="10dp"
+            app:layout_flexBasisPercent="0%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@mipmap/ic_launcher_round"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.google.android.flexbox.FlexboxLayout>
+        <com.google.android.flexbox.FlexboxLayout
+            android:background="#ff0000"
+            app:layout_flexShrink="1"
+            app:layout_flexGrow="1"
+            android:layout_margin="10dp"
+            app:layout_flexBasisPercent="0%"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@mipmap/ic_launcher_round"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.google.android.flexbox.FlexboxLayout>
+
+        <com.google.android.flexbox.FlexboxLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <TextView
+                android:id="@+id/textView1"
+                android:text="xxx"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/textView2"
+                android:text="xxx2"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+            <TextView
+                android:id="@+id/textView3"
+                android:text="xxx3"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </com.google.android.flexbox.FlexboxLayout>
+    </com.google.android.flexbox.FlexboxLayout>
+
+    <com.google.android.flexbox.FlexboxLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:flexDirection="column"
+        app:flexWrap="wrap"
+        app:alignItems="flex_start" >
+        <Button
+            android:id="@+id/btn1"
+            android:text="选择文件"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/btn2"
+            android:onClick="click"
+            android:text="选择图片"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:text="WebSocket测试"
+            android:id="@+id/btn3"
+            android:onClick="download"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+    </com.google.android.flexbox.FlexboxLayout>
+</com.google.android.flexbox.FlexboxLayout>

@@ -51,6 +51,7 @@ public class FileTaskDao {
     public FileTaskBean selectOne(String networkpath) {
         FileTaskBean fileTaskBean = new FileTaskBean();
         SQLiteDatabase db = sqLiteOpenHelper.getReadableDatabase();
+
         Cursor cursor = db.query(
                 FileTaskBean.TABLE_NAME,
                 new String[]{FileTaskBean._ID, FileTaskBean.FILENAME, FileTaskBean.NETWORKPATH, FileTaskBean.FILESIZE, FileTaskBean.DOWNLOADSIZE, FileTaskBean.FILEMD5},
